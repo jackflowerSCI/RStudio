@@ -5,6 +5,14 @@
  */
 
 package com.rstudio;
+import java.awt.Dialog;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 /**
  *
@@ -15,6 +23,29 @@ public class LoginWindow extends javax.swing.JFrame {
     /** Creates new form LoginWindow */
     public LoginWindow() {
         initComponents();
+    }
+    
+    private void logIn() {
+        connectToDatabase(jTextField1.getText(), jPasswordField1.getText());
+    }
+    
+    private void connectToDatabase(String user, String password) {
+        var props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+        props.setProperty("ssl", "true");
+        
+        try {
+            var conn = DriverManager.getConnection("jdbc:postgresql://localhost", props);
+            Application.setDatabaseConnection(conn);
+        } catch (SQLException ex) {
+            var dialog = new JDialog(this, "", true);
+            dialog.setSize(200, 60);
+            dialog.setLocation(WIDTH/2, WIDTH/2);
+            var text = new JLabel("Unable to log in");
+            dialog.add(text);
+            dialog.setVisible(true);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -32,6 +63,7 @@ public class LoginWindow extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPasswordField1 = new javax.swing.JPasswordField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,7 +81,12 @@ public class LoginWindow extends javax.swing.JFrame {
 
         jButton1.setText("Sign up");
 
-        jPasswordField1.setText("jPasswordField1");
+        jButton2.setText("Log in");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -62,8 +99,10 @@ public class LoginWindow extends javax.swing.JFrame {
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(137, 137, 137)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
+                .addContainerGap(117, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(92, 92, 92)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +128,9 @@ public class LoginWindow extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
 
@@ -97,8 +138,11 @@ public class LoginWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        logIn();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,6 +181,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

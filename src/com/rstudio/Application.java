@@ -14,11 +14,20 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
+import java.sql.Connection;
 
 public class Application {
+    private static Connection _databaseConnection;
+    private static LoginWindow _loginWindow;
+    
+    public static Connection getDatabaseConnection() { return _databaseConnection; }
+    public static void setDatabaseConnection(Connection conn) { _databaseConnection = conn; }
+    
     public static void main(String args[]) {
         runSplashScreen(2000);
-        System.exit(0);
+        
+        _loginWindow = new LoginWindow();
+        _loginWindow.setVisible(true);
     }
     
     private static boolean runSplashScreen(long millis) {
