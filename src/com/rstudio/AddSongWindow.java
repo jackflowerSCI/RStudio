@@ -5,6 +5,10 @@
  */
 package com.rstudio;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author boryniarz
@@ -16,6 +20,17 @@ public class AddSongWindow extends javax.swing.JFrame {
      */
     public AddSongWindow() {
         initComponents();
+    }
+
+    public void addSong() {
+        try {
+            var conn = Application.getDatabaseConnection();
+            var st = conn.prepareStatement("INSERT INTO songs(name, author, album) VALUES(?, ?, ?)");
+            st.setString(1, jTextField1.getText());
+            st.setString(2, jTextField2.getText());
+            st.setString(3, jTextField3.getText());
+        } catch (SQLException ex) {
+        }
     }
 
     /**
@@ -47,6 +62,11 @@ public class AddSongWindow extends javax.swing.JFrame {
         jLabel4.setText("Album");
 
         jButton1.setText("Add Song");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,6 +116,10 @@ public class AddSongWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        addSong();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
